@@ -191,6 +191,18 @@
     }
 
     @keyframes spin { to { transform: rotate(360deg); } }
+
+    .system-config {
+      margin-top: 48px;
+      padding-top: 20px;
+      border-top: 1px solid #e0e0e0;
+      font-size: 13px;
+      color: #aaa;
+      display: flex;
+      gap: 20px;
+    }
+
+    .system-config span { color: #666; }
   </style>
 </head>
 <body>
@@ -213,6 +225,8 @@
       <p id="answerText"></p>
     </div>
 
+    <div class="system-config" id="systemConfig"></div>
+
     <div class="sources-box" id="sourcesBox">
       <h2>Retrieved Articles</h2>
       <div id="sourcesList"></div>
@@ -220,6 +234,11 @@
   </div>
 
   <script>
+    fetch("/api/stats").then(r => r.json()).then(s => {
+      document.getElementById("systemConfig").innerHTML =
+        `System config — Chunk size: <span>${s.chunk_size} words</span> · Overlap: <span>${Math.round(s.overlap_ratio * 100)}%</span> · Top-K: <span>${s.top_k}</span>`;
+    });
+
     document.getElementById("question").addEventListener("keydown", function(e) {
       if (e.key === "Enter") ask();
     });
