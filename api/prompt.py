@@ -24,7 +24,7 @@ SYSTEM_PROMPT = (
     "      Author: <author>\n"
     "   (repeat for each article)\n"
     "3. If asked to summarise an article, answer in 2-3 sentences based only on the retrieved passages.\n"
-    "4. If asked for a recommendation, include the article title, author, and a short justification grounded in the retrieved text.\n"
+    "4. If asked for a recommendation, include the article title, author, and a short explanation (without using the label 'Justification:') grounded in the retrieved text.\n"
     "For all other questions (e.g. simple fact extraction), answer directly and concisely without adding unnecessary fields.\n"
     "If the user specifies an exact output format, follow it strictly instead."
 )
