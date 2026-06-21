@@ -9,44 +9,17 @@ A Retrieval-Augmented Generation (RAG) system that answers questions based on a 
 ## System Flow
 
 ```
-  User Question
-       |
-       v
-+------------------+
-|  Embedding Model |  text-embedding-3-small
-|  question        |
-|  --> vector      |
-+--------+---------+
-         |
-         | 1536-dim vector
-         |
-         |              .-----------.
-         |             /  Vector DB  \
-         +----------> |   Pinecone   |  ~50,000 indexed chunks
-         top-K query   |             |
-                        \           /
-                         '----|----'
-                              |
-                              | top-8 semantically
-                              | closest chunks
-                              v
-                   +---------------------+
-                   |   Augmented Prompt  |
-                   |---------------------|
-                   | [System Prompt]     |
-                   | [Retrieved Context] |
-                   | [User Question]     |
-                   +--------+------------+
-                            |
-                            v
-                   +------------------+
-                   |    LLM (GPT)     |  gpt-5-mini
-                   |  generates       |
-                   |  grounded answer |
-                   +--------+---------+
-                            |
-                            v
-                        Answer
+                                              .-------------.
+                                             /   Vector DB   \
+                                            |    (Pinecone)   |
+                                             \               /
+                                              '-------------'
+                                                  ^       |
+                                           embed  |       | top-8 chunks
+                                           query  |       |
+                                                  |       v
+  User Question --> [ Embedding ] ----------------+   [ Augmented Prompt ] --> [ LLM ] --> Answer
+                                                      system + context + question
 ```
 
 ---
