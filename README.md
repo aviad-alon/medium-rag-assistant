@@ -1,6 +1,6 @@
 # Medium RAG Assistant
 
-A Retrieval-Augmented Generation (RAG) system that answers questions based on a dataset of 7,682 Medium articles.
+A Retrieval-Augmented Generation (RAG) system that answers questions based on a dataset of 7,682 Medium articles. Answers are grounded strictly in the dataset - no external knowledge used.
 
 **Live Demo:** [medium-rag-assistant-gilt.vercel.app](https://medium-rag-assistant-gilt.vercel.app)
 
@@ -10,35 +10,100 @@ A Retrieval-Augmented Generation (RAG) system that answers questions based on a 
 
 ```
 User Question
-     │
-     ▼
-┌─────────────────────┐
-│   Embedding Model   │  text-embedding-3-small (via llmod.ai)
-│  Question → Vector  │
-└────────┬────────────┘
-         │  1536-dim vector
-         ▼
-┌─────────────────────┐
-│      Pinecone       │  Vector similarity search
-│   Top-8 Retrieval   │  ~50,000 article chunks indexed
-└────────┬────────────┘
-         │  8 most relevant chunks + metadata
-         ▼
-┌─────────────────────┐
-│  Augmented Prompt   │  System prompt + context + question
-│  (Context Builder)  │
-└────────┬────────────┘
-         │
-         ▼
-┌─────────────────────┐
-│     LLM (GPT)       │  gpt-5-mini (via llmod.ai)
-│  Answer Generation  │  Strictly grounded in retrieved context
-└────────┬────────────┘
-         │
-         ▼
+     |
+     v
++---------------------+
+|   Embedding Model   |  text-embedding-3-small (via llmod.ai)
+|  Question -> Vector |
++--------+------------+
+         |  1536-dim vector
+         v
++---------------------+
+|      Pinecone       |  Vector similarity search
+|   Top-8 Retrieval   |  ~50,000 article chunks indexed
++--------+------------+
+         |  8 most relevant chunks + metadata
+         v
++---------------------+
+|  Augmented Prompt   |  System prompt + context + question
+|  (Context Builder)  |
++--------+------------+
+         |
+         v
++---------------------+
+|     LLM (GPT)       |  gpt-5-mini (via llmod.ai)
+|  Answer Generation  |  Strictly grounded in retrieved context
++--------+------------+
+         |
+         v
      JSON Response
   { response, context, augmented_prompt }
 ```
+
+---
+
+## What the System Can Do
+
+The assistant supports 4 types of queries, all answered strictly from the dataset:
+
+### 1. Precise Fact Retrieval
+Locate a single specific article based on semantic criteria and return its title and author.
+
+**Example query:**
+> "Find an article that reframes marketing as a conversation with readers, aimed at writers who find self-promotion uncomfortable. Provide the title and author."
+
+**Expected output:**
+```
+Title: <article title>
+Author: <author name>
+```
+
+---
+
+### 2. Multi-result Topic Listing (up to 3 results)
+Return multiple distinct article titles matching a theme or topic.
+
+**Example query:**
+> "List exactly 3 articles about education. Return only the titles."
+
+**Expected output:**
+```
+1. Title: <title 1>
+2. Title: <title 2>
+3. Title: <title 3>
+```
+
+---
+
+### 3. Key Idea Summary Extraction
+Identify a relevant article and generate a concise 2-3 sentence summary of its main idea, based only on retrieved passages.
+
+**Example query:**
+> "Find an article that argues past pandemics can spur innovation and recovery, and summarise its central argument."
+
+**Expected output:**
+> A 2-3 sentence summary grounded in the retrieved text.
+
+---
+
+### 4. Recommendation with Evidence-Based Justification
+Recommend one relevant article and explain why, grounded in the retrieved text.
+
+**Example query:**
+> "I want practical, beginner-friendly advice on building habits that actually stick. Which article would you recommend, and why?"
+
+**Expected output:**
+```
+Title: <article title>
+Author: <author name>
+<short explanation grounded in the article text>
+```
+
+---
+
+### Out of Scope
+If the answer cannot be found in the dataset, the system responds:
+> "I don't know based on the provided Medium articles data."
 
 ---
 
@@ -48,7 +113,7 @@ User Question
 
 | Step | Description |
 |------|-------------|
-| Load | Read `medium-english-50mb.csv` — 7,682 articles |
+| Load | Read `medium-english-50mb.csv` - 7,682 articles |
 | Chunk | Split each article into 600-word chunks with 10% overlap (60 words) |
 | Embed | Encode each chunk using `text-embedding-3-small` in batches of 100 |
 | Store | Upsert vectors + metadata (title, author, chunk text) into Pinecone |
@@ -75,22 +140,24 @@ User Question
 
 ## RAG Parameters
 
-- **Chunk size:** 600 words
-- **Overlap:** 60 words (10%)
-- **Top-K:** 8 chunks retrieved per query
-- **Embedding dimensions:** 1536
+| Parameter | Value | Constraint |
+|-----------|-------|------------|
+| Chunk size | 600 words | max 1024 |
+| Overlap | 60 words (10%) | max 30% |
+| Top-K | 8 | max 30 |
+| Embedding dimensions | 1536 | - |
 
 ---
 
 ## Project Structure
 
 ```
-├── api/
-│   ├── prompt.py      # POST /api/prompt — RAG query endpoint
-│   └── stats.py       # GET  /api/stats  — system config endpoint
-├── ingest.py          # One-time ingestion script
-├── query.py           # Local testing script
-├── index.html         # Frontend UI
-├── vercel.json        # Deployment configuration
-└── requirements.txt   # Python dependencies
+api/
+  prompt.py      # POST /api/prompt - RAG query endpoint
+  stats.py       # GET  /api/stats  - system config endpoint
+ingest.py        # One-time ingestion script
+query.py         # Local testing script
+index.html       # Frontend UI
+vercel.json      # Deployment configuration
+requirements.txt # Python dependencies
 ```
