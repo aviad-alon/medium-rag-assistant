@@ -34,7 +34,7 @@
     }
 
     header p {
-      color: #666;
+      color: #888;
       font-size: 15px;
       line-height: 1.5;
     }
@@ -56,9 +56,7 @@
       transition: border-color 0.2s;
     }
 
-    .search-box input:focus {
-      border-color: #1a1a1a;
-    }
+    .search-box input:focus { border-color: #1a1a1a; }
 
     .search-box button {
       padding: 12px 22px;
@@ -76,96 +74,8 @@
     .search-box button:hover { background: #333; }
     .search-box button:disabled { background: #999; cursor: not-allowed; }
 
-    .answer-box {
-      background: #fff;
-      border: 1.5px solid #e0e0e0;
-      border-radius: 10px;
-      padding: 24px;
-      margin-bottom: 24px;
-      display: none;
-    }
-
-    .answer-box h2 {
-      font-size: 13px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: #888;
-      margin-bottom: 12px;
-    }
-
-    .answer-box p {
-      font-size: 15px;
-      line-height: 1.7;
-      color: #1a1a1a;
-      white-space: pre-wrap;
-    }
-
-    .sources-box {
-      display: none;
-    }
-
-    .sources-box h2 {
-      font-size: 13px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: #888;
-      margin-bottom: 12px;
-    }
-
-    .source-card {
-      background: #fff;
-      border: 1.5px solid #e0e0e0;
-      border-radius: 10px;
-      padding: 16px 20px;
-      margin-bottom: 10px;
-    }
-
-    .source-card .title {
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-
-    .source-card .title a {
-      color: #1a1a1a;
-      text-decoration: none;
-      border-bottom: 1px solid #ccc;
-    }
-
-    .source-card .title a:hover {
-      border-bottom-color: #1a1a1a;
-    }
-
-    .source-card .meta {
-      font-size: 13px;
-      color: #888;
-      margin-bottom: 8px;
-    }
-
-    .source-card .score {
-      display: inline-block;
-      font-size: 12px;
-      background: #f0f0f0;
-      color: #555;
-      padding: 2px 8px;
-      border-radius: 20px;
-    }
-
-    .source-card .chunk {
-      font-size: 13px;
-      color: #555;
-      margin-top: 8px;
-      line-height: 1.5;
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
     .error {
-      color: #d00;
+      color: #c00;
       font-size: 14px;
       margin-bottom: 16px;
       display: none;
@@ -175,14 +85,14 @@
       display: none;
       align-items: center;
       gap: 8px;
-      color: #666;
+      color: #888;
       font-size: 14px;
       margin-bottom: 24px;
     }
 
     .loader span {
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
       border: 2px solid #ddd;
       border-top-color: #1a1a1a;
       border-radius: 50%;
@@ -192,17 +102,118 @@
 
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    .system-config {
-      margin-top: 48px;
-      padding-top: 20px;
-      border-top: 1px solid #e0e0e0;
-      font-size: 13px;
-      color: #aaa;
-      display: flex;
-      gap: 20px;
+    /* Answer box */
+    .answer-box {
+      background: #fff;
+      border: 1.5px solid #e0e0e0;
+      border-left: 3px solid #1a1a1a;
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-bottom: 28px;
+      display: none;
+      animation: fadeIn 0.3s ease;
     }
 
-    .system-config span { color: #666; }
+    .answer-box h2 {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #aaa;
+      margin-bottom: 10px;
+    }
+
+    .answer-box p {
+      font-size: 15px;
+      line-height: 1.75;
+      color: #1a1a1a;
+      white-space: pre-wrap;
+    }
+
+    /* Sources */
+    .sources-box { display: none; }
+
+    .sources-box h2 {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #aaa;
+      margin-bottom: 12px;
+    }
+
+    .source-card {
+      background: #fff;
+      border: 1.5px solid #e8e8e8;
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 8px;
+      transition: box-shadow 0.2s, border-color 0.2s;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .source-card:hover {
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      border-color: #d0d0d0;
+    }
+
+    .source-card .title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+
+    .source-card .title a {
+      color: #1a1a1a;
+      text-decoration: none;
+    }
+
+    .source-card .title a:hover { text-decoration: underline; }
+
+    .source-card .author {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 10px;
+    }
+
+    .score-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+    }
+
+    .score-high  { background: #e6f4ea; color: #1e7e34; }
+    .score-mid   { background: #fff8e1; color: #b07c00; }
+    .score-low   { background: #fdecea; color: #c0392b; }
+
+    .source-card .chunk {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.55;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* System config */
+    .system-config {
+      margin-top: 40px;
+      padding-top: 18px;
+      border-top: 1px solid #e8e8e8;
+      font-size: 12px;
+      color: #bbb;
+    }
+
+    .system-config strong { color: #999; font-weight: 500; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
 <body>
@@ -225,23 +236,29 @@
       <p id="answerText"></p>
     </div>
 
-    <div class="system-config" id="systemConfig"></div>
-
     <div class="sources-box" id="sourcesBox">
       <h2>Retrieved Articles</h2>
       <div id="sourcesList"></div>
     </div>
+
+    <div class="system-config" id="systemConfig"></div>
   </div>
 
   <script>
     fetch("/api/stats").then(r => r.json()).then(s => {
       document.getElementById("systemConfig").innerHTML =
-        `System config — Chunk size: <span>${s.chunk_size} words</span> · Overlap: <span>${Math.round(s.overlap_ratio * 100)}%</span> · Top-K: <span>${s.top_k}</span>`;
+        `<strong>System config</strong> &nbsp;·&nbsp; Chunk size: ${s.chunk_size} words &nbsp;·&nbsp; Overlap: ${Math.round(s.overlap_ratio * 100)}% &nbsp;·&nbsp; Top-K: ${s.top_k}`;
     });
 
-    document.getElementById("question").addEventListener("keydown", function(e) {
+    document.getElementById("question").addEventListener("keydown", e => {
       if (e.key === "Enter") ask();
     });
+
+    function scoreClass(s) {
+      if (s >= 0.8) return "score-high";
+      if (s >= 0.6) return "score-mid";
+      return "score-low";
+    }
 
     async function ask() {
       const question = document.getElementById("question").value.trim();
@@ -273,7 +290,6 @@
         answerBox.style.display = "block";
 
         if (data.response.includes("I don't know based on the provided Medium articles data")) {
-          sourcesBox.style.display = "none";
           return;
         }
 
@@ -284,10 +300,12 @@
           if (seen.has(item.title)) return;
           seen.add(item.title);
           const searchUrl = `https://medium.com/search?q=${encodeURIComponent(item.title)}`;
+          const cls = scoreClass(item.score);
           list.innerHTML += `
             <div class="source-card">
               <div class="title"><a href="${searchUrl}" target="_blank" rel="noopener">${item.title}</a></div>
-              <div class="meta"><span class="score">score ${item.score.toFixed(3)}</span></div>
+              <div class="author">${item.author || ""}</div>
+              <span class="score-badge ${cls}">${item.score.toFixed(3)} relevance</span>
               <div class="chunk">${item.chunk}</div>
             </div>`;
         });

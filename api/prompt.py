@@ -84,6 +84,7 @@ class handler(BaseHTTPRequestHandler):
                 {
                     "article_id": m.metadata["article_id"],
                     "title": m.metadata["title"],
+                    "author": m.metadata.get("author", ""),
                     "chunk": m.metadata["text"],
                     "score": m.score,
                 }
