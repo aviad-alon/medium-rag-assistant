@@ -9,35 +9,44 @@ A Retrieval-Augmented Generation (RAG) system that answers questions based on a 
 ## System Flow
 
 ```
-User Question
-     |
-     v
-+---------------------+
-|   Embedding Model   |  text-embedding-3-small (via llmod.ai)
-|  Question -> Vector |
-+--------+------------+
-         |  1536-dim vector
-         v
-+---------------------+
-|      Pinecone       |  Vector similarity search
-|   Top-8 Retrieval   |  ~50,000 article chunks indexed
-+--------+------------+
-         |  8 most relevant chunks + metadata
-         v
-+---------------------+
-|  Augmented Prompt   |  System prompt + context + question
-|  (Context Builder)  |
-+--------+------------+
+  User Question
+       |
+       v
++------------------+
+|  Embedding Model |  text-embedding-3-small
+|  question        |
+|  --> vector      |
++--------+---------+
          |
-         v
-+---------------------+
-|     LLM (GPT)       |  gpt-5-mini (via llmod.ai)
-|  Answer Generation  |  Strictly grounded in retrieved context
-+--------+------------+
+         | 1536-dim vector
          |
-         v
-     JSON Response
-  { response, context, augmented_prompt }
+         |              .-----------.
+         |             /  Vector DB  \
+         +----------> |   Pinecone   |  ~50,000 indexed chunks
+         top-K query   |             |
+                        \           /
+                         '----|----'
+                              |
+                              | top-8 semantically
+                              | closest chunks
+                              v
+                   +---------------------+
+                   |   Augmented Prompt  |
+                   |---------------------|
+                   | [System Prompt]     |
+                   | [Retrieved Context] |
+                   | [User Question]     |
+                   +--------+------------+
+                            |
+                            v
+                   +------------------+
+                   |    LLM (GPT)     |  gpt-5-mini
+                   |  generates       |
+                   |  grounded answer |
+                   +--------+---------+
+                            |
+                            v
+                        Answer
 ```
 
 ---
