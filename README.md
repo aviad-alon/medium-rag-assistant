@@ -9,19 +9,31 @@ A Retrieval-Augmented Generation (RAG) system that answers questions based on a 
 ## System Flow
 
 ```
-                                         +-----------------+
-                                         |    Vector DB    |
-                                         |    (Pinecone)   |
-                                         +-----------------+
-                                            ^           |
-                                  embed     |           |  top-8 chunks
-                                  vector    |           v
-
-  User Question  -->  [ Embedding ]  ------+    [ Augmented Prompt ]  -->  [ LLM ]  -->  Answer
-
-                                                system prompt
-                                               + context chunks
-                                               + user question
+     User Question
+           |
+           v
+    +--------------+                  +-----------------+
+    |  Embedding   |  -- vector -->   |    Vector DB    |
+    |    Model     |  <-- top-8  --   |    (Pinecone)   |
+    +--------------+     chunks       +-----------------+
+           |
+           v
+    +--------------+
+    |  Augmented   |
+    |    Prompt    |
+    |              |
+    | system prompt|
+    | + context    |
+    | + question   |
+    +--------------+
+           |
+           v
+    +--------------+
+    |     LLM      |
+    +--------------+
+           |
+           v
+         Answer
 ```
 
 ---
