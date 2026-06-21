@@ -253,6 +253,11 @@
         document.getElementById("answerText").textContent = data.response;
         answerBox.style.display = "block";
 
+        if (data.response.includes("I don't know based on the provided Medium articles data")) {
+          sourcesBox.style.display = "none";
+          return;
+        }
+
         const list = document.getElementById("sourcesList");
         list.innerHTML = "";
         const seen = new Set();
